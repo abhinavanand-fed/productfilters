@@ -68,13 +68,29 @@ export const POST = async (req: NextRequest) => {
       filter: filter.hasFilter() ? filter.get() : undefined,
     })
 
-    return new Response(JSON.stringify(products))
+    // Set CORS headers
+    const headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Content-Type': 'application/json',
+    }
+
+    // Return response with CORS headers
+    return new Response(JSON.stringify(products), { headers })
   } catch (err) {
-    // i.e. log error to sentry
+    // Log error to Sentry or any other error tracking service
     console.error(err)
 
+    // Return error response with CORS headers
     return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
       status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Content-Type': 'application/json',
+      },
     })
   }
 }
